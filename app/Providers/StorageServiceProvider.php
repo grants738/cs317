@@ -33,6 +33,7 @@ class StorageServiceProvider extends ServiceProvider
         $this->app->singleton(Product::class, function($app) {
             return new Product;
         });
+        
         $this->app->singleton(Basket::class, function($app) {
             return new Basket($app->make(StorageInterface::class), $app->make(Product::class));
         });

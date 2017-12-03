@@ -2,7 +2,7 @@
 # Order Received
 Hi, {{$order->customer->name}}
 
-Your order has been placed and is preparing for shipment!
+Your order has been placed!
 
 You can review you order by clicking the button below.
 

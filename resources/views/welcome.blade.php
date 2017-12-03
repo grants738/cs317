@@ -9,12 +9,10 @@
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,200,600" rel="stylesheet" type="text/css">
-        <link rel="stylesheet" href="/css/app.css">
-        
+        <link rel="stylesheet" href="/css/app.css">  
     </head>
     <body>
 
-        <h1>Siewerts and Sundries</h1>
-
+        <h1 style="text-align: center;">Siewerts and Sundries</h1>
     </body>
 </html>

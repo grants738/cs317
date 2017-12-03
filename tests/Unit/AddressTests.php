@@ -2,19 +2,20 @@
 
 namespace Tests\Unit;
 
+use App\Product;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Foundation\Testing\DatabaseTransactions;
 
-class ExampleTest extends TestCase
+class AddressTests extends TestCase
 {
     /**
-     * A basic test example.
+     * Test that an address can be added to the database
      *
      * @return void
      */
-    public function testBasicTest()
+    public function testAddressCanBeInserted()
     {
-        $this->assertTrue(true);
+
     }
 }

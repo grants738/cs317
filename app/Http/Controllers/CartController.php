@@ -18,11 +18,13 @@ class CartController extends Controller
 		$this->product = $product;
 	}
 
+    // Show the shopping cart with added items
     public function index() {
         $this->basket->refresh();
     	return view('cart.index');
     }
 
+    // Add a product to the shopping cart
     public function add($slug, $quantity) {
     	$product = $this->product->where('slug', $slug)->first();
 
@@ -30,6 +32,8 @@ class CartController extends Controller
     		return redirect()->route('home');
     	}
 
+        // Throw exception if quantity of product is added to cart
+        // that exceeds stock quantity.
     	try {
     		$this->basket->add($product, $quantity);
     	} catch(QuantityExcededException $e) {
@@ -39,6 +43,7 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('message','Added ' . $product->title . ' to cart.');
     }
 
+    // Update product quantity in cart
     public function update(Request $request, $slug) {
         $product = $this->product->where('slug', $slug)->first();
 
@@ -55,6 +60,7 @@ class CartController extends Controller
         return redirect()->route('cart.index')->with('message', 'Updated ' . $product->title . ' quantity.');
     }
 
+    // Remove a Product from the cart
     public function remove($slug) {
     	$product = $this->product->where('slug', $slug)->first();
 
@@ -62,11 +68,12 @@ class CartController extends Controller
     		return redirect()->route('home');
     	}
 
-    	$this->basket->remove();
+    	$this->basket->remove($product);
 
         return redirect()->route('cart.index');
     }
 
+    // Clear the entire cart of Products
     public function flush() {
     	$this->basket->clear();
 

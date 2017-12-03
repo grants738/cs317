@@ -8,6 +8,7 @@ use App\Basket\Basket;
 use App\Address;
 use App\Order;
 use Mail;
+use DB;
 
 use Illuminate\Http\Request;
 
@@ -19,6 +20,7 @@ class OrderController extends Controller
 		$this->basket = $basket;
 	}
     
+    // Show the order page
     public function index() {
 
     	$this->basket->refresh();
@@ -30,6 +32,7 @@ class OrderController extends Controller
     	return view('order.index');
     }
 
+    // Display a completed order
     public function show($hash, Order $order) {
         $order = $order->with(['address', 'products'])->where('hash', $hash)->first();
 
@@ -40,6 +43,7 @@ class OrderController extends Controller
         return view('order.show')->with('order', $order);
     }
 
+    // Create a new order
     public function create(Request $request, Customer $customer, Address $address) {
     	$this->basket->refresh();
 
@@ -88,6 +92,7 @@ class OrderController extends Controller
     		$this->getQuantities($allItems)
     	);
 
+        // Attempt payment process
     	$result = \Braintree_Transaction::sale([
             'amount' => $this->basket->subTotal() + 5,
             'paymentMethodNonce' => $request->payment_method_nonce,
@@ -96,8 +101,10 @@ class OrderController extends Controller
             ]
         ]);
 
+        // Create a new OrderWasCreated event
         $event = new \App\Events\OrderWasCreated($order, $this->basket);
 
+        // If the payment failed, dispatch the failed payment event
         if (!$result->success) {
             $event->attach(new \App\Events\RecordFailedPayment);
             $event->dispatch();
@@ -105,6 +112,7 @@ class OrderController extends Controller
             return redirect()->route('order.index')->with('error', 'The order payment failed. Please use another payment method.');
         }
 
+        // Attach other important events to be dispatched
         $event->attach([
             new \App\Events\UpdateStock,
             new \App\Events\MarkOrderPaid,
@@ -113,11 +121,13 @@ class OrderController extends Controller
             new \App\Events\SendOrderCreatedEmail
         ]);
 
+        // Dispatch all attached events
         $event->dispatch();
 
         return redirect()->route('order.show', ['hash' => $hash])->with('success', "Your order has been placed and is preparing for shipment!");
     }
 
+    // Return quantities of items in cart
     protected function getQuantities($items) {
     	$quantities = [];
 

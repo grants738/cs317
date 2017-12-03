@@ -23,9 +23,7 @@
 	</style>
 </head>
 <body>
-
 	<div id="app">
-
 		<nav class="navbar navbar-default">
 		  	<div class="container-fluid">
 		    	<div class="navbar-header">
@@ -40,29 +38,51 @@
 
 			    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			      	<ul class="nav navbar-nav navbar-right">
+			      		@if(auth()->check())
+						<li><a href="{{route('admin.orders')}}">Orders</a></li>
+						<li><a href="{{route('admin.products')}}">Products</a></li>
+						<li>
+							<a href="{{ route('logout') }}"
+                                onclick="event.preventDefault();
+                                         document.getElementById('logout-form').submit();">
+                                Logout
+                            </a>
+
+                            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                {{ csrf_field() }}
+                            </form>
+						</li>
+			      		@else
 			        	<li><a href="{{route('cart.index')}}"><span class="glyphicon glyphicon-shopping-cart" aria-hidden="true"></span> Cart ({{$basket->itemCount()}})</a></li>
+			        	@endif
 			      	</ul>
 			    </div>
 		 	</div>
 		</nav>
+		
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2">
+					@if(Session::has('success'))
+						<div class="alert alert-success text-center" role="alert">
+							<strong>Success!</strong> {{Session::get('success')}}
+						</div>
+					@endif
 
-		@if(Session::has('success'))
-			<div class="alert alert-success text-center" role="alert">
-				<strong>Success!</strong> {{Session::get('success')}}
-			</div>
-		@endif
+					@if(Session::has('message'))
+						<div class="alert alert-info text-center" role="alert">
+							{{Session::get('message')}}
+						</div>
+					@endif
 
-		@if(Session::has('message'))
-			<div class="alert alert-info text-center" role="alert">
-				{{Session::get('message')}}
+					@if(Session::has('error'))
+						<div class="alert alert-danger text-center" role="alert">
+							<strong>Uh oh!</strong> {{Session::get('error')}}
+						</div>
+					@endif
+				</div>
 			</div>
-		@endif
-
-		@if(Session::has('error'))
-			<div class="alert alert-danger text-center" role="alert">
-				<strong>Uh oh!</strong> {{Session::get('error')}}
-			</div>
-		@endif
+		</div>
 
 		@yield('content')
 	</div>

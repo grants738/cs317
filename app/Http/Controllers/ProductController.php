@@ -7,6 +7,7 @@ use App\Product;
 
 class ProductController extends Controller
 {
+	// Display product page
     public function get(Request $request, $slug) {
     	$product = Product::where('slug', $slug)->first();
 

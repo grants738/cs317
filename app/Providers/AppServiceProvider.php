@@ -7,6 +7,8 @@ use App\Order;
 use App\Customer;
 use App\Address;
 use App\Payment;
+use DB;
+use Log;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -21,6 +23,12 @@ class AppServiceProvider extends ServiceProvider
         \Braintree_Configuration::merchantId('78dy5jrzpbp8g5p8');
         \Braintree_Configuration::publicKey('nf7pkry7z3hftvyt');
         \Braintree_Configuration::privateKey('df1a7527ef2d51bd6db2ed932c1b6b2b');
+
+        DB::listen(function($query) {
+            //Log::info($query->sql);
+        });
+
+        DB::enableQueryLog();
     }
 
     /**
