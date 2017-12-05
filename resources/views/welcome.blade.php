@@ -14,5 +14,7 @@
     <body>
 
         <h1 style="text-align: center;">Siewerts and Sundries</h1>
+
+        <a href="{{ url('/products') }}"><h2 style="text-align: center;">Click Here to View Products</h2>
     </body>
 </html>
