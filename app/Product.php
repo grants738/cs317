@@ -56,4 +56,11 @@ class Product extends Model
 
         return Storage::url($this->image);
     }
+
+    public function truncateDescription() {
+        if(strlen($this->description) > 25)
+            return substr($this->description, 0, 25) . '...';
+
+        return $this->description;
+    }
 }
