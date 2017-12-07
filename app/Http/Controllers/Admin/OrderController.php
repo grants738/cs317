@@ -17,17 +17,11 @@ class OrderController extends Controller
 
     public function show(Order $order)
     {
-    	if (!$order)
-    		return back()->with('error', 'Order not found.');
-
     	return view('admin.orders.order')->with('order', $order);
     }
 
     public function delete(Order $order)
     {
-    	if (!$order)
-    		return back()->with('error', 'Order not found.');
-
         // Detach items in pivot table
     	$order->products()->detach();
 

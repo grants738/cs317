@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class ProductController extends Controller
 {
@@ -17,17 +18,11 @@ class ProductController extends Controller
 
     public function show(Product $product)
     {
-        if(!$product)
-            return back()->with('error', 'Product not found.');
-
     	return view('admin.products.product')->with('product', $product);
     }
 
     public function update(Request $request, Product $product)
     {
-        if(!$product)
-            return back()->with('error', 'Product not found');
-
     	$this->validate($request,[
     		'title' => 'required|max:255',
     		'slug' => 'required',
@@ -37,6 +32,8 @@ class ProductController extends Controller
     	]);
 
     	$product->update($request->only(['title','slug','description','price','stock']));
+
+        $this->storeImageIfExists($request);
 
     	return redirect()->route('admin.products')->with('success','Product information updated.');
     }
@@ -56,24 +53,27 @@ class ProductController extends Controller
     		'stock' => 'required|numeric'
     	]);
 
-        $path = $request->file('image')->store('public');
+        $product = Product::create($request->only(['title','slug','description','price','stock']));
 
-    	$product = Product::create($request->only(['title','slug','description','price','stock']));
-
-        $product->image = $path;
-
-        $product->save();
+        $this->storeImageIfExists($request);
 
     	return redirect()->route('admin.products')->with('success', 'Product created.');
     }
 
     public function delete(Product $product)
     {
-        if(!$product)
-            return back()->with('error', 'Product not found');
-
     	$product->delete();
 
     	return redirect()->route('admin.products')->with('success', 'Product deleted.');
+    }
+
+    protected function storeImageIfExists($request) {
+         if($request->hasFile('image')) { 
+            $path = $request->file('image')->store('public');
+
+            $product->image = $path;
+
+            $product->save();
+        }
     }
 }
