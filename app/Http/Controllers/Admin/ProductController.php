@@ -33,7 +33,7 @@ class ProductController extends Controller
 
     	$product->update($request->only(['title','slug','description','price','stock']));
 
-        $this->storeImageIfExists($request);
+        $this->storeImageIfExists($request, $product);
 
     	return redirect()->route('admin.products')->with('success','Product information updated.');
     }
@@ -55,7 +55,7 @@ class ProductController extends Controller
 
         $product = Product::create($request->only(['title','slug','description','price','stock']));
 
-        $this->storeImageIfExists($request);
+        $this->storeImageIfExists($request, $product);
 
     	return redirect()->route('admin.products')->with('success', 'Product created.');
     }
@@ -67,7 +67,7 @@ class ProductController extends Controller
     	return redirect()->route('admin.products')->with('success', 'Product deleted.');
     }
 
-    protected function storeImageIfExists($request) {
+    protected function storeImageIfExists($request, $product) {
          if($request->hasFile('image')) { 
             $path = $request->file('image')->store('public');
 
