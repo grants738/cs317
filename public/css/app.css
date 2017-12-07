@@ -6297,6 +6297,7 @@ a.badge:focus {
   height: auto;
   margin-left: auto;
   margin-right: auto;
+  max-height: 210px;
 }
 
 .thumbnail .caption {

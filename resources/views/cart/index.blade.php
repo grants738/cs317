@@ -24,7 +24,7 @@
 						<tbody>
 							@foreach($basket->all() as $item)
 								<tr>
-									<td><img src="{{$item->image}}" width="50" height="50"></td>
+									<td><img src="{{$item->getImageURL()}}" width="50" height="50"></td>
 									<td><h4><a href="{{route('product.get',['slug' => $item->slug])}}">{{$item->title}}</a></h4></td>
 									<td><h4>${{number_format($item->price, 2)}}</h4></td>
 									<td>

@@ -5,7 +5,7 @@
 	<div class="container">
 		<div class="row">
 			<div class="col-md-4">
-				<img src="{{$product->image}}" alt="{{$product->title}} image" class="thumbnail img-responsive">
+				<img src="{{$product->getImageURL()}}" alt="{{$product->title}} image" class="thumbnail img-responsive">
 			</div>
 			<div class="col-md-8">
 				@if($product->hasLowStock())

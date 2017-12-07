@@ -28,7 +28,22 @@ class OrderController extends Controller
     	if (!$order)
     		return back()->with('error', 'Order not found.');
 
-    	$order->delete();
+        // Detach items in pivot table
+    	$order->products()->detach();
+
+        // Remove customer associated with order
+        if ($order->customer->orders()->count() < 2)
+            $order->customer()->delete();
+
+        // Remove address associated with order
+        if ($order->address->order()->count() < 2)
+            $order->address()->delete();
+
+        // Remove payment associated with order
+        $order->payment()->delete();
+
+        // Remove order
+        $order->delete();
 
     	return redirect()->route('admin.orders')->with('success', 'Order deleted');
     }

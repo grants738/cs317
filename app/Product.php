@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Order;
+use Storage;
 
 class Product extends Model
 {
@@ -46,5 +47,13 @@ class Product extends Model
     // Order contains many Products
     public function order() {
         return $this->belongsToMany(Order::class, 'orders_products')->withPivot('quantity');
+    }
+
+    public function getImageURL() {
+        if (substr($this->image, 0, 4) === "http") {
+            return $this->image;
+        }
+
+        return Storage::url($this->image);
     }
 }

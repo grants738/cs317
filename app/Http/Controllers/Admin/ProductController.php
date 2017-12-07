@@ -56,7 +56,13 @@ class ProductController extends Controller
     		'stock' => 'required|numeric'
     	]);
 
-    	Product::create($request->only(['title','slug','description','price','stock']));
+        $path = $request->file('image')->store('public');
+
+    	$product = Product::create($request->only(['title','slug','description','price','stock']));
+
+        $product->image = $path;
+
+        $product->save();
 
     	return redirect()->route('admin.products')->with('success', 'Product created.');
     }

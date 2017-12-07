@@ -18,7 +18,7 @@
 				</tr>
 				@foreach($products as $product)
 					<tr>
-						<td><img src="{{$product->image}}" alt="" width="25" height="25"></td>
+						<td><img src="{{$product->getImageURL()}}" alt="" width="25" height="25"></td>
 						<td>{{$product->id}}</td>
 						<td>{{$product->slug}}</td>
 						<td>{{$product->title}}</td>
