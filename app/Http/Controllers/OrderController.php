@@ -66,24 +66,24 @@ class OrderController extends Controller
 
     	$hash = bin2hex(random_bytes(32));
 
-    	$customer = $customer->firstOrCreate([
-    		'email' => $request->email,
-    		'name' => $request->name,
-    	]);
+        $customer = $customer->firstOrCreate([
+            'email' => $request->email,
+            'name' => $request->name,
+        ]);
 
-    	$address = $address->firstOrCreate([
-    		'address1' => $request->address1,
-    		'address2' => $request->address2,
-    		'city' => $request->city,
-    		'postal_code' => $request->zCode
-    	]);
+        $address = $address->firstOrCreate([
+            'address1' => $request->address1,
+            'address2' => $request->address2,
+            'city' => $request->city,
+            'postal_code' => $request->zCode
+        ]);
 
-    	$order = $customer->orders()->create([
-    		'hash' => $hash,
-    		'paid' => false,
-    		'total' => $this->basket->subTotal() + 5,
-    		'address_id' => $address->id
-    	]);
+        $order = $customer->orders()->create([
+            'hash' => $hash,
+            'paid' => false,
+            'total' => $this->basket->subTotal() + 5,
+            'address_id' => $address->id
+        ]);
 
     	$allItems = $this->basket->all();
 
@@ -105,12 +105,12 @@ class OrderController extends Controller
         $event = new \App\Events\OrderWasCreated($order, $this->basket);
 
         // If the payment failed, dispatch the failed payment event
-        if (!$result->success) {
-            $event->attach(new \App\Events\RecordFailedPayment);
-            $event->dispatch();
+        // if (!$result->success) {
+        //     $event->attach(new \App\Events\RecordFailedPayment);
+        //     $event->dispatch();
 
-            return redirect()->route('order.index')->with('error', 'The order payment failed. Please use another payment method.');
-        }
+        //     return redirect()->route('order.index')->with('error', 'The order payment failed. Please use another payment method.');
+        // }
 
         // Attach other important events to be dispatched
         $event->attach([
