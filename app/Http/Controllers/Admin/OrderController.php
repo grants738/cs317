@@ -25,6 +25,9 @@ class OrderController extends Controller
         // Detach items in pivot table
     	$order->products()->detach();
 
+        // Remove order
+        $order->delete();
+
         // Remove customer associated with order
         if ($order->customer->orders()->count() < 2)
             $order->customer()->delete();
@@ -35,9 +38,6 @@ class OrderController extends Controller
 
         // Remove payment associated with order
         $order->payment()->delete();
-
-        // Remove order
-        $order->delete();
 
     	return redirect()->route('admin.orders')->with('success', 'Order deleted');
     }
